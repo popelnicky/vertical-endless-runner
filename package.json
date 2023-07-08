@@ -1,0 +1,30 @@
+{
+  "name": "vertical-endless-runner",
+  "version": "1.0.0",
+  "description": "It is a Test-Task project",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/popelnicky/vertical-endless-runner.git"
+  },
+  "keywords": [
+    "javascript",
+    "pixi.js",
+    "game"
+  ],
+  "author": "popelnicky@live.ru",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/popelnicky/vertical-endless-runner/issues"
+  },
+  "homepage": "https://github.com/popelnicky/vertical-endless-runner#readme",
+  "devDependencies": {
+    "copy-webpack-plugin": "^11.0.0",
+    "eslint": "^8.44.0",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  }
+}
