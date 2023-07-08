@@ -4,7 +4,10 @@
   "description": "It is a Test-Task project",
   "main": "main.js",
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "start": "webpack-dev-server --config ./build_configurations/webpack.config.js --mode development --devtool inline-source-map",
+    "build": "webpack --config ./build_configurations/webpack.config.js --mode production"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/popelnicky/vertical-endless-runner.git"
@@ -26,5 +29,8 @@
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "pixi.js": "^7.2.4"
   }
 }
