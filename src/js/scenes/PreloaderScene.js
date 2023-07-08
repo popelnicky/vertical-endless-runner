@@ -3,45 +3,57 @@ import { SceneNames } from "../constants/SceneNames.js";
 import { BaseScene } from "./BaseScene.js";
 
 export class PreloaderScene extends BaseScene {
-    #loadingBar = null;
+  #loadingBar = null;
 
-    constructor(gameRef) {
-        super(SceneNames.preloader, gameRef);
+  constructor(parent, gameRef) {
+    super(SceneNames.preloader, parent, gameRef);
 
-        this.#init(gameRef.screen.width, gameRef.screen.height);
+    this.init(gameRef.screen.width, gameRef.screen.height);
+  }
+
+  init(width, height) {
+    this.#loadingBar = new Text("0%...", {
+      fontFamily: "Arial",
+      fontSize: 56,
+      fill: 0x000000,
+    });
+    this.#loadingBar.anchor.set(0.5);
+
+    this.view.addChild(this.#loadingBar);
+
+    this.onResize(width, height);
+  }
+
+  async start() {
+    const cfg = await Assets.load("/assets/data/images.json");
+    const aliases = [];
+
+    for (let image of cfg.images) {
+      const [key, path] = Object.entries(image).pop();
+
+      Assets.add(key, path);
+      aliases.push(key);
     }
 
-    #init(width, height) {
-        this.#loadingBar = new Text("0%...", {
-            fontFamily: "Arial",
-            fontSize: 56,
-            fill: 0x000000,
-        });
-        this.#loadingBar.anchor.set(0.5);
+    this.parent.textures = await Assets.load(aliases, (progress) => {
+      this.#loadingBar.text =
+        progress > 1 ? `${parseInt(progress * 100)}%...` : "100%";
+    });
 
-        this.view.addChild(this.#loadingBar);
+    this.parent.moveTo(SceneNames.intro);
+  }
 
-        this.onResize(width, height);
-    }
+  stop() {
+    this.view.removeChild(this.#loadingBar);
 
-    async start() {
-        const cfg = await Assets.load("/assets/data/assets.json");
-        const assets = [];
+    this.#loadingBar.destroy(true);
+    this.#loadingBar = null;
 
-        for (let asset of cfg.assets) {
-            const [key, path] = Object.entries(asset).pop();
-            
-            Assets.add(key, path);
-            assets.push(key);
-        }
+    super.destroy();
+  }
 
-        const textures = await Assets.load(assets, (progress) => {
-            this.#loadingBar.text = progress > 1 ? `${parseInt(progress * 100)}%...` : "100%";
-        });
-    }
-
-    onResize(width, height) {
-        this.view.x = width * 0.5;
-        this.view.y = height * 0.5;
-    }
+  onResize(width, height) {
+    this.view.x = width * 0.5;
+    this.view.y = height * 0.5;
+  }
 }
