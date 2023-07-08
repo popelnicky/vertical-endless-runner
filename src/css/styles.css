@@ -6,8 +6,3 @@ body {
     overflow: hidden;
     background-color: white;
 }
-
-#game {
-    display: block;
-    width: 100%;
-}

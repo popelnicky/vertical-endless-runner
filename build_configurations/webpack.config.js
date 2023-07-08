@@ -19,10 +19,10 @@ export default (env, args) => {
     plugins: [
       new CopyWebpackPlugin({
         patterns: [
-          // {
-          //   from: "src/assets",
-          //   to: "assets/",
-          // },
+          {
+            from: "src/assets",
+            to: "assets/",
+          },
           {
             from: "src/css",
             to: "css/",
