@@ -3,3 +3,5 @@ export const SceneNames = {
     intro: "IntroScene",
     game: "GameScene",
 };
+
+Object.freeze(SceneNames);

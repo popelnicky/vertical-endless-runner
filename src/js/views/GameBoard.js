@@ -5,10 +5,13 @@ import { Alien } from "./Alien.js";
 import { Bird } from "./Bird.js";
 import { Plane } from "./Plane.js";
 import { Utils } from "../servises/Utils.js";
+import { GameBoardSector } from "../constants/GameBoardSector.js";
 
 export class GameBoard {
   #currentWidth = 0;
   #currentHeight = 0;
+  #currentSector = GameBoardSector.Middle;
+  #direction = 0;
 
   #background = null;
   #balloon = null;
@@ -18,6 +21,9 @@ export class GameBoard {
   #gameOver = false;
 
   #onFinishHandler = null;
+
+  #startSwapPoint = null;
+  #endSwapPoint = null;
 
   view = null;
 
@@ -46,11 +52,56 @@ export class GameBoard {
   }
 
   #init(textures) {
+    this.#initListeners();
+
     this.#background = new Background(textures.background);
     this.view.addChild(this.#background.view);
 
     this.#balloon = new Balloon(textures.balloon);
     this.view.addChild(this.#balloon.view);
+  }
+
+  #initListeners() {
+    document.addEventListener("touchstart", (event) => {
+      const { pageX: x } = event.changedTouches[0];
+
+      this.#startSwapPoint = { x };
+    });
+
+    document.addEventListener("touchmove", (event) => {
+      const { pageX: x } = event.changedTouches[0];
+
+      this.#endSwapPoint = { x };
+    });
+
+    document.addEventListener("touchend", (event) => {
+      const diff = this.#endSwapPoint?.x - this.#startSwapPoint?.x || 0;
+
+      if (diff === 0) {
+        this.moveBalloonTo(0);
+
+        return;
+      }
+
+      this.moveBalloonTo(diff > 0 ? 1 : -1);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      let direction = 0;
+
+      switch (event.keyCode) {
+        case 39: {
+          direction = 1;
+          break;
+        }
+        case 37: {
+          direction = -1;
+          break;
+        }
+      }
+
+      this.moveBalloonTo(direction);
+    });
   }
 
   flyTheBomb(bomb, bombSector) {
@@ -68,11 +119,36 @@ export class GameBoard {
   isObjectsIntersect(first, second) {
     const firstRect = first.getBounds();
     const secondRect = second.getBounds();
+    const factor = 0.98;
 
-    return firstRect.x + firstRect.width > secondRect.x &&
-           firstRect.x < secondRect.x + secondRect.width &&
-           firstRect.y + firstRect.height > secondRect.y &&
-           firstRect.y < secondRect.y + secondRect.height;
+    return (firstRect.x + firstRect.width) * factor > secondRect.x &&
+           firstRect.x < (secondRect.x + secondRect.width) * factor &&
+           (firstRect.y + firstRect.height) * factor > secondRect.y &&
+           firstRect.y < (secondRect.y + secondRect.height) * factor;
+  }
+
+  moveBalloonTo(direction) {
+    this.#direction = direction;
+
+    if (this.#direction) {
+      let nextSector = this.#direction > 0 ? GameBoardSector.Right : GameBoardSector.Left;
+
+      if (nextSector === this.#currentSector) {
+        return;
+      }
+
+      switch (this.#currentSector) {
+        case GameBoardSector.Left:
+          case GameBoardSector.Right: {
+          this.#currentSector = GameBoardSector.Middle
+          break;
+        }
+        case GameBoardSector.Middle: {
+          this.#currentSector = nextSector;
+          break;
+        }
+      }
+    }
   }
 
   onUpdate(deltaTime) {
@@ -87,15 +163,23 @@ export class GameBoard {
     }
 
     if (this.#balloon.view.y > this.#currentHeight * 0.6) {
-      this.#balloon.onUpdate(deltaTime);
+      this.#balloon.onUpdate(deltaTime, this.#currentSector);
 
       return;
+    }
+
+    if (this.#balloon.view.x !== this.#currentWidth * this.#currentSector) {
+      this.#balloon.view.x += this.#direction * 1.5;
     }
 
     this.#background.onUpdate(deltaTime);
     this.#enemy?.onUpdate(deltaTime, this.#currentWidth, this.#currentHeight);
 
-    if (this.#background.view.y > this.#currentHeight * 1.2 && !this.#enemy && !this.#bomb) {
+    if (
+      this.#background.view.y > this.#currentHeight * 1.2 &&
+      !this.#enemy &&
+      !this.#bomb
+    ) {
       let random = Utils.random(1, 1000) % 3;
       const { enemyCtor, enemyTexture, bombTexture } = this.#enemies[random];
 
@@ -141,7 +225,7 @@ export class GameBoard {
 
     this.view.removeChild(this.#background.view);
     this.view.removeChild(this.#balloon.view);
-    
+
     this.view = null;
   }
 }
