@@ -7,24 +7,23 @@ export class PreloaderScene extends BaseScene {
 
   constructor(parent, gameRef) {
     super(SceneNames.preloader, parent, gameRef);
-
-    this.init(gameRef.screen.width, gameRef.screen.height);
   }
 
-  init(width, height) {
+  init() {
     this.#loadingBar = new Text("0%...", {
-      fontFamily: "Arial",
+      fontFamily: "3Dventure",
       fontSize: 56,
       fill: 0x000000,
     });
     this.#loadingBar.anchor.set(0.5);
 
     this.view.addChild(this.#loadingBar);
-
-    this.onResize(width, height);
   }
 
   async start() {
+    this.init();
+    this.onResize(this.game.screen.width, this.game.screen.height);
+
     const cfg = await Assets.load("/assets/data/images.json");
     const aliases = [];
 
@@ -35,7 +34,7 @@ export class PreloaderScene extends BaseScene {
       aliases.push(key);
     }
 
-    this.parent.textures = await Assets.load(aliases, (progress) => {
+    this.parent.cache.textures = await Assets.load(aliases, (progress) => {
       this.#loadingBar.text =
         progress > 1 ? `${parseInt(progress * 100)}%...` : "100%";
     });
@@ -46,7 +45,7 @@ export class PreloaderScene extends BaseScene {
   stop() {
     this.view.removeChild(this.#loadingBar);
 
-    this.#loadingBar.destroy(true);
+    this.#loadingBar.destroy();
     this.#loadingBar = null;
 
     super.destroy();

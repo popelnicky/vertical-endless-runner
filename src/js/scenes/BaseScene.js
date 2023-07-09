@@ -1,7 +1,7 @@
 import { Container } from "pixi.js";
 
 export class BaseScene {
-  #game = null;
+  game = null;
   name = "unknown";
   parent = null;
   view = null;
@@ -9,27 +9,27 @@ export class BaseScene {
   constructor(sceneName, parent, gameRef) {
     this.name = sceneName;
     this.parent = parent;
-    this.#game = gameRef;
+    this.game = gameRef;
 
     this.view = new Container();
 
-    this.#game.stage.addChild(this.view);
+    this.game.stage.addChild(this.view);
   }
 
-  init(width, height) {}
+  init() {}
 
   start() {}
 
   stop() {}
 
-  onUpdate() {}
+  onUpdate(deltaTime) {}
 
   onResize(width, height) {}
 
   destroy() {
     this.parent = null;
 
-    this.#game.stage.removeChild(this.view);
+    this.game.stage.removeChild(this.view);
     this.view.destroy(true);
 
     this.view = null;

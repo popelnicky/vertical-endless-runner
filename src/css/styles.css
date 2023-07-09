@@ -6,3 +6,13 @@ body {
     overflow: hidden;
     background-color: white;
 }
+
+@font-face {
+    font-family: "Fipps-Regular";
+    src: url("/assets/fonts/Fipps-Regular.woff") format("woff");
+}
+
+@font-face {
+    font-family: "3Dventure";
+    src: url("/assets/fonts/3Dventure.woff") format("woff");
+}

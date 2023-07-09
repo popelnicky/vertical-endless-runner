@@ -1,3 +1,5 @@
 import { App } from "./App.js";
 
-new App().start();
+window.addEventListener("load", () => {
+  new App().start();
+});
