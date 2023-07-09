@@ -15,6 +15,7 @@ export class GameBoard {
   #enemy = null;
   #enemies = null;
   #bomb = null;
+  #gameOver = false;
 
   #onFinishHandler = null;
 
@@ -64,7 +65,21 @@ export class GameBoard {
     this.#enemy = null;
   }
 
+  isObjectsIntersect(first, second) {
+    const firstRect = first.getBounds();
+    const secondRect = second.getBounds();
+
+    return firstRect.x + firstRect.width > secondRect.x &&
+           firstRect.x < secondRect.x + secondRect.width &&
+           firstRect.y + firstRect.height > secondRect.y &&
+           firstRect.y < secondRect.y + secondRect.height;
+  }
+
   onUpdate(deltaTime) {
+    if (this.#gameOver) {
+      return;
+    }
+
     if (this.#background.view.y > this.#background.view.height) {
       this.#onFinishHandler();
 
@@ -99,6 +114,12 @@ export class GameBoard {
 
     if (this.#bomb) {
       this.#bomb.y += 3.6;
+
+      if (this.isObjectsIntersect(this.#balloon.view, this.#bomb)) {
+        this.#gameOver = true;
+
+        setTimeout(() => this.#onFinishHandler(), 3000);
+      }
     }
 
     if (this.#bomb?.y > this.#currentHeight + this.#bomb?.height * 0.5) {
@@ -119,12 +140,8 @@ export class GameBoard {
     this.#onFinishHandler = null;
 
     this.view.removeChild(this.#background.view);
-    this.#background.destroy();
-
     this.view.removeChild(this.#balloon.view);
-    this.#balloon.destroy();
-
-    this.view.destroy(true);
+    
     this.view = null;
   }
 }

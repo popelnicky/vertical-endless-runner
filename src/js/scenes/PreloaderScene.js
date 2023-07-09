@@ -55,8 +55,6 @@ export class PreloaderScene extends BaseScene {
 
   stop() {
     this.view.removeChild(this.#loadingBar);
-
-    this.#loadingBar.destroy();
     this.#loadingBar = null;
 
     super.destroy();

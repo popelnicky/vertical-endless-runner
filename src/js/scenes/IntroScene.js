@@ -54,19 +54,15 @@ export class IntroScene extends BaseScene {
 
   stop() {
     this.view.removeChild(this.#background);
-    this.#background.destroy();
     this.#background = null;
 
     this.view.removeChild(this.#logo);
-    this.#logo.destroy();
     this.#logo = null;
 
     this.view.removeChild(this.#title);
-    this.#title.destroy();
     this.#title = null;
 
     this.view.removeChild(this.#playButton.view);
-    this.#playButton.view.destroy(true);
     this.#playButton = null;
 
     super.destroy();
