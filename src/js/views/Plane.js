@@ -1,9 +1,8 @@
-import { BaseEnemyView } from "./BaseAnamyView.js";
+import { BaseEnemyView } from "./BaseEnemyView.js";
 
 export class Plane extends BaseEnemyView {
-  
-    constructor(enemyTexture, bombTexture) {
-    super(enemyTexture, bombTexture);
+  constructor(enemyTexture, bombTexture, clearEnemyCb, flyBombCb, bombSector) {
+    super(enemyTexture, bombTexture, clearEnemyCb, flyBombCb, bombSector);
 
     this.enemy.scale.set(0.6);
     this.bomb.scale.set(0.5);

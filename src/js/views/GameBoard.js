@@ -1,16 +1,20 @@
-import { Container } from "pixi.js";
+import { Container, Sprite } from "pixi.js";
 import { Background } from "./Background.js";
 import { Balloon } from "./Balloon.js";
 import { Alien } from "./Alien.js";
 import { Bird } from "./Bird.js";
 import { Plane } from "./Plane.js";
+import { Utils } from "../servises/Utils.js";
 
 export class GameBoard {
+  #currentWidth = 0;
   #currentHeight = 0;
 
   #background = null;
   #balloon = null;
-  #enemies = [];
+  #enemy = null;
+  #enemies = null;
+  #bomb = null;
 
   #onFinishHandler = null;
 
@@ -20,7 +24,23 @@ export class GameBoard {
     this.#onFinishHandler = onFinishHandler;
 
     this.view = new Container();
-
+    this.#enemies = [
+      {
+        enemyCtor: Bird,
+        enemyTexture: textures.bird,
+        bombTexture: textures.oliveBranch,
+      },
+      {
+        enemyCtor: Plane,
+        enemyTexture: textures.plane,
+        bombTexture: textures.bag,
+      },
+      {
+        enemyCtor: Alien,
+        enemyTexture: textures.alien,
+        bombTexture: textures.cow,
+      },
+    ];
     this.#init(textures);
   }
 
@@ -30,17 +50,18 @@ export class GameBoard {
 
     this.#balloon = new Balloon(textures.balloon);
     this.view.addChild(this.#balloon.view);
+  }
 
-    // this.#enemies.push(new Alien(textures.alien, textures.cow));
-    // this.#enemies.push(new Bird(textures.bird, textures.oliveBranch));
-    // this.#enemies.push(new Plane(textures.plane, textures.bag));
+  flyTheBomb(bomb, bombSector) {
+    this.#bomb = bomb;
+    this.view.addChild(this.#bomb);
 
-    // for (let enemy of this.#enemies) {
-    //     this.view.addChild(enemy.view);
+    this.#bomb.x = this.#currentWidth * (0.25 * bombSector);
+  }
 
-    //     enemy.view.x = 200;
-    //     enemy.view.y = 150;
-    // }
+  clearEnemy() {
+    this.view.removeChild(this.#enemy.view);
+    this.#enemy = null;
   }
 
   onUpdate(deltaTime) {
@@ -57,13 +78,41 @@ export class GameBoard {
     }
 
     this.#background.onUpdate(deltaTime);
+    this.#enemy?.onUpdate(deltaTime, this.#currentWidth, this.#currentHeight);
+
+    if (this.#background.view.y > this.#currentHeight * 1.2 && !this.#enemy && !this.#bomb) {
+      let random = Utils.random(1, 1000) % 3;
+      const { enemyCtor, enemyTexture, bombTexture } = this.#enemies[random];
+
+      random = Utils.random(1, 1000) % 3;
+
+      this.#enemy = new enemyCtor(
+        enemyTexture,
+        bombTexture,
+        () => this.clearEnemy(),
+        (ref, bombSector) => this.flyTheBomb(ref, bombSector),
+        random + 1
+      );
+
+      this.view.addChild(this.#enemy.view);
+    }
+
+    if (this.#bomb) {
+      this.#bomb.y += 3.6;
+    }
+
+    if (this.#bomb?.y > this.#currentHeight + this.#bomb?.height * 0.5) {
+      this.#bomb = null;
+    }
   }
 
   onResize(width, height) {
+    this.#currentWidth = width;
     this.#currentHeight = height;
 
     this.#background.onResize(width, height);
     this.#balloon.onResize(width, height);
+    this.#enemy?.onResize(width, height);
   }
 
   destroy() {

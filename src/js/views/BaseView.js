@@ -4,7 +4,7 @@ export class BaseView {
   constructor() {}
 
   destroy() {
-    this.view.destroy();
+    this.view.destroy(true);
     this.view = null;
   }
 }
