@@ -1,19 +1,7 @@
 {
   "images": [
     {
-      "acaciaLeaf": "assets/images/acacia_leaf.png"
-    },
-    {
-      "alienFrog": "assets/images/alien_frog.png"
-    },
-    {
-      "alienStarship": "assets/images/alien_starship.png"
-    },
-    {
       "alien": "assets/images/alien.png"
-    },
-    {
-      "astrodog": "assets/images/astrodog.png"
     },
     {
       "introBack": "assets/images/intro_back.png"
@@ -31,37 +19,13 @@
       "bird": "assets/images/bird.png"
     },
     {
-      "brichLeaf": "assets/images/brich_leaf.png"
-    },
-    {
       "cow": "assets/images/cow.png"
-    },
-    {
-      "crazyBird": "assets/images/crazy_bird.png"
-    },
-    {
-      "fernLeaf": "assets/images/fern_leaf.png"
-    },
-    {
-      "mapleLeaf": "assets/images/maple_leaf.png"
     },
     {
       "oliveBranch": "assets/images/olive_branch.png"
     },
     {
       "plane": "assets/images/plane.png"
-    },
-    {
-      "planet": "assets/images/planet.png"
-    },
-    {
-      "saturn": "assets/images/saturn.png"
-    },
-    {
-      "sparrow": "assets/images/sparrow.png"
-    },
-    {
-      "starship": "assets/images/starship.png"
     }
   ]
 }

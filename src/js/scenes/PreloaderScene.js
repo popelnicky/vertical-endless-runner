@@ -25,12 +25,13 @@ export class PreloaderScene extends BaseScene {
   async start() {
     super.start();
 
-    this.#soundManager = new Howl({
-      src: ["assets/sounds/background.mp3"],
-      loop: true,
-    });
-    Howler.volume(0);
-    this.#soundManager.play();
+    // Unfortunately hosting does not support sound files for free plan
+    // this.#soundManager = new Howl({
+    //   src: ["assets/sounds/background.mp3"],
+    //   loop: true,
+    // });
+    // Howler.volume(0);
+    // this.#soundManager.play();
 
     const cfg = await Assets.load("assets/data/images.json");
     const aliases = [];
@@ -47,7 +48,7 @@ export class PreloaderScene extends BaseScene {
         progress > 1 ? `${parseInt(progress * 100)}%...` : "100%";
     });
 
-    Howler.volume(0.6);
+    // Howler.volume(0.6);
 
     this.parent.moveTo(SceneNames.intro);
   }
