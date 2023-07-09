@@ -1,7 +1,7 @@
 import { Graphics, Sprite, Text } from "pixi.js";
 import { SceneNames } from "../constants/SceneNames.js";
 import { BaseScene } from "./BaseScene.js";
-import { Button, ButtonContainer } from "@pixi/ui";
+import { ButtonContainer } from "@pixi/ui";
 
 export class IntroScene extends BaseScene {
   #background = null;
@@ -48,14 +48,8 @@ export class IntroScene extends BaseScene {
 
     this.#playButton.view.addChild(buttonLabel);
 
-    //buttonLabel.anchor.set(0.5);
     buttonLabel.x = this.#playButton.view.width * 0.5 - buttonLabel.width * 0.5;
     buttonLabel.y = this.#playButton.view.height * 0.5 - buttonLabel.height * 0.5;
-  }
-
-  start() {
-    this.init();
-    this.onResize(this.game.screen.width, this.game.screen.height);
   }
 
   stop() {
@@ -98,6 +92,6 @@ export class IntroScene extends BaseScene {
   }
 
   #playTheGame() {
-    // this.parent.moveTo(SceneNames.game);
+    this.parent.moveTo(SceneNames.game);
   }
 }

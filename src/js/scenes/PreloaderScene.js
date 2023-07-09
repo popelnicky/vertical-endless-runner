@@ -21,8 +21,7 @@ export class PreloaderScene extends BaseScene {
   }
 
   async start() {
-    this.init();
-    this.onResize(this.game.screen.width, this.game.screen.height);
+    super.start();
 
     const cfg = await Assets.load("/assets/data/images.json");
     const aliases = [];

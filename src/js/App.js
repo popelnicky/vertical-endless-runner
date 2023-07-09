@@ -3,6 +3,7 @@ import { SceneNames } from "./constants/SceneNames.js";
 import { PreloaderScene } from "./scenes/PreloaderScene.js";
 import { ScenesManager } from "./scenes/ScenesManager.js";
 import { IntroScene } from "./scenes/IntroScene.js";
+import { GameScene } from "./scenes/GameScene.js";
 
 export class App {
   #game = null;
@@ -18,6 +19,7 @@ export class App {
     this.#scenesManager = new ScenesManager(this.#game);
     this.#scenesManager.register(PreloaderScene);
     this.#scenesManager.register(IntroScene);
+    this.#scenesManager.register(GameScene);
   }
 
   start() {
