@@ -1,8 +1,10 @@
 import { Assets, Text } from "pixi.js";
 import { SceneNames } from "../constants/SceneNames.js";
 import { BaseScene } from "./BaseScene.js";
+import { Howl } from "howler";
 
 export class PreloaderScene extends BaseScene {
+  #soundManager = null;
   #loadingBar = null;
 
   constructor(parent, gameRef) {
@@ -23,7 +25,14 @@ export class PreloaderScene extends BaseScene {
   async start() {
     super.start();
 
-    const cfg = await Assets.load("/assets/data/images.json");
+    this.#soundManager = new Howl({
+      src: ["assets/sounds/background.mp3"],
+      loop: true,
+    });
+    Howler.volume(0);
+    this.#soundManager.play();
+
+    const cfg = await Assets.load("assets/data/images.json");
     const aliases = [];
 
     for (let image of cfg.images) {
@@ -37,6 +46,8 @@ export class PreloaderScene extends BaseScene {
       this.#loadingBar.text =
         progress > 1 ? `${parseInt(progress * 100)}%...` : "100%";
     });
+
+    Howler.volume(0.6);
 
     this.parent.moveTo(SceneNames.intro);
   }
